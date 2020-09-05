@@ -8,11 +8,6 @@ import qualified Data.Text                     as T
 import           Data.Text                      ( Text )
 import qualified Data.Char                     as Char
 
-isUpper :: Text -> Bool
-isUpper a | alphaChars == "" = False
-          | otherwise        = T.all Char.isUpper alphaChars
-  where alphaChars = T.filter Char.isAlpha a
-
 data Category = ShoutQuestion | Silence | Question | Shout | Other
 
 getResponse :: Category -> Text
@@ -22,17 +17,21 @@ getResponse Question      = "Sure."
 getResponse Shout         = "Whoa, chill out!"
 getResponse Other         = "Whatever."
 
+isUpper :: Text -> Bool
+isUpper a | T.null alpha = False
+          | otherwise    = T.all Char.isUpper alpha
+  where alpha = T.filter Char.isAlpha a
+
 categorizeStatement :: Text -> Category
-categorizeStatement a | isSilence             = Silence
-                      | isShout && isQuestion = ShoutQuestion
-                      | isQuestion            = Question
-                      | isShout               = Shout
-                      | otherwise             = Other
+categorizeStatement statement | isSilence             = Silence
+                              | isShout && isQuestion = ShoutQuestion
+                              | isQuestion            = Question
+                              | isShout               = Shout
+                              | otherwise             = Other
  where
-  withoutSpaces = T.filter (not . Char.isSpace) a
-  isQuestion    = T.isSuffixOf "?" withoutSpaces
-  isShout       = isUpper withoutSpaces
-  isSilence     = T.null withoutSpaces
+  isQuestion = T.isSuffixOf "?" . T.filter (not . Char.isSpace) $ statement
+  isShout    = isUpper statement
+  isSilence  = T.all Char.isSpace statement
 
 responseFor :: Text -> Text
 responseFor = getResponse . categorizeStatement
