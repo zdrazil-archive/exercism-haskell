@@ -18,8 +18,15 @@ isValid strand a | null a    = False
 isValidDna :: String -> Bool
 isValidDna = isValid dna
 
-isValidRna :: String -> Bool
-isValidRna = isValid rna
+dnaToRnaNucleotide :: Char -> Char
+dnaToRnaNucleotide a = case a of
+  'g' -> 'c'
+  'c' -> 'g'
+  't' -> 'a'
+  'a' -> 'u'
+
+dnaToRna :: String -> String
+dnaToRna = map dnaToRnaNucleotide
 
 
 toRNA :: String -> Either Char String
