@@ -6,10 +6,10 @@ module DNA
 where
 
 isDnaNucleotide :: Char -> Bool
-isDnaNucleotide a = elem a ("GCTA" :: String)
+isDnaNucleotide a = a `elem` ("GCTA" :: String)
 
 getInvalidNucleotides :: String -> String
-getInvalidNucleotides a = filter (not . isDnaNucleotide) a
+getInvalidNucleotides = filter (not . isDnaNucleotide)
 
 dnaToRnaNucleotide :: Char -> Char
 dnaToRnaNucleotide a = case a of
@@ -24,7 +24,7 @@ dnaToRna = map dnaToRnaNucleotide
 
 toRNA :: String -> Either Char String
 toRNA xs =
-  let invalids = getInvalidNucleotides $ xs
+  let invalids = getInvalidNucleotides xs
   in  case invalids of
         [] -> Right $ dnaToRna xs
         _  -> Left . head $ invalids
