@@ -11,10 +11,10 @@ dnaToRnaChar a = case a of
   'A' -> Right 'U'
   _   -> Left a
 
-rnaFromDnaString :: String -> Either Char [Char]
-rnaFromDnaString = mapM dnaToRnaChar
+dnaToRnaString :: String -> Either Char [Char]
+dnaToRnaString = mapM dnaToRnaChar
 
 toRNA :: String -> Either Char String
-toRNA xs = case rnaFromDnaString xs of
+toRNA xs = case dnaToRnaString xs of
   Left  symbol -> Left symbol
   Right dna    -> Right dna
