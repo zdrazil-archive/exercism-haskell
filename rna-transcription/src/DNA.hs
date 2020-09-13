@@ -5,35 +5,36 @@ module DNA
   )
 where
 
-newtype DNA = DNA String
+newtype DNANucleotide = DNANucleotide Char deriving (Show)
+type DNA = [DNANucleotide]
+
+newtype RNANucleotide = RNANucleotide Char
 
 isDnaNucleotide :: Char -> Bool
 isDnaNucleotide a = a `elem` ("GCTA" :: String)
 
-getInvalidNucleotides :: String -> String
-getInvalidNucleotides = filter (not . isDnaNucleotide)
+dnaNucleotideFromChar :: Char -> Either Char DNANucleotide
+dnaNucleotideFromChar n | isDnaNucleotide n = Right $ DNANucleotide n
+                        | otherwise         = Left n
+
+dnaNucleotideToChar :: DNANucleotide -> Char
+dnaNucleotideToChar a = a
 
 dnaFromString :: String -> Either Char DNA
-dnaFromString xs =
-  let invalids = getInvalidNucleotides xs
-  in  case invalids of
-        [] -> Right $ DNA xs
-        _  -> Left . head $ invalids
+dnaFromString = mapM dnaNucleotideFromChar
 
+rnaFromDna :: DNA -> RNA
+rnaFromDna = map dnaToRnaNucleotide
 
-stringFromDna :: DNA -> String
-stringFromDna (DNA s) = s
+dnaToRnaN :: DNANucleotide -> Char -> RNANucleotide
+dnaToRnaN a = (a : Char)
 
-rnaFromDna :: DNA -> String
-rnaFromDna = map dnaToRnaNucleotide . stringFromDna
-
-dnaToRnaNucleotide :: Char -> Char
+dnaToRnaNucleotide :: DNANucleotide -> RNANucleotide
 dnaToRnaNucleotide a = case a of
   'G' -> 'C'
   'C' -> 'G'
   'T' -> 'A'
   'A' -> 'U'
-  _   -> a
 
 
 toRNA :: String -> Either Char String
