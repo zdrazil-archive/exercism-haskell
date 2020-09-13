@@ -11,7 +11,7 @@ dnaToRnaChar a = case a of
   'A' -> Right 'U'
   _   -> Left a
 
-dnaToRnaString :: String -> Either Char [Char]
+dnaToRnaString :: String -> Either Char String
 dnaToRnaString = mapM dnaToRnaChar
 
 toRNA :: String -> Either Char String
