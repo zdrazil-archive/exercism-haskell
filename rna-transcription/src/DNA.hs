@@ -1,39 +1,20 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module DNA
   ( toRNA
   )
 where
 
-newtype DNANucleotide = DNANucleotide Char deriving (Show)
-type DNA = [DNANucleotide]
+dnaToRnaChar :: Char -> Either Char Char
+dnaToRnaChar a = case a of
+  'G' -> Right 'C'
+  'C' -> Right 'G'
+  'T' -> Right 'A'
+  'A' -> Right 'U'
+  _   -> Left a
 
-newtype RNANucleotide = RNANucleotide Char deriving (Show)
-
-isDnaNucleotide :: Char -> Bool
-isDnaNucleotide a = a `elem` ("GCTA" :: String)
-
-dnaNucleotideFromChar :: Char -> Either Char DNANucleotide
-dnaNucleotideFromChar n | isDnaNucleotide n = Right $ DNANucleotide n
-                        | otherwise         = Left n
-
-dnaFromString :: String -> Either Char DNA
-dnaFromString = mapM dnaNucleotideFromChar
-
-dnaToRnaChar :: Char -> Char
-dnaToRnaChar x = case x of
-  'G' -> 'C'
-  'C' -> 'G'
-  'T' -> 'A'
-  'A' -> 'U'
-
-
-dnaToRnaNucleotide :: DNANucleotide -> RNANucleotide
-dnaToRnaNucleotide = RNANucleotide . dnaToRnaChar . head . show
-
+rnaFromDnaString :: String -> Either Char [Char]
+rnaFromDnaString = mapM dnaToRnaChar
 
 toRNA :: String -> Either Char String
--- toRNA xs = undefined
-toRNA xs = case dnaFromString xs of
+toRNA xs = case rnaFromDnaString xs of
   Left  symbol -> Left symbol
-  Right dna    -> Right . show . map dnaToRnaNucleotide $ dna
+  Right dna    -> Right dna
