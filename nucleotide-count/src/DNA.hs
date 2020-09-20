@@ -1,3 +1,6 @@
+{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE LambdaCase #-}
+
 module DNA
   ( nucleotideCounts
   , Nucleotide(..)
@@ -5,9 +8,8 @@ module DNA
 where
 
 import           Data.Map                       ( Map
-                                                , fromList
+                                                , fromListWith
                                                 )
-import           Data.List
 
 data Nucleotide = A | C | G | T deriving (Eq, Ord, Show)
 
@@ -20,12 +22,7 @@ charToNucleotide a = case a of
   _   -> Left a
 
 nucleotideCounts :: String -> Either String (Map Nucleotide Int)
-nucleotideCounts xs = case mapM charToNucleotide xs of
-  Left invalidNucleotide -> Left [invalidNucleotide]
-  Right nucleotides ->
-    Right
-      . fromList
-      . map (\a -> (head a, length a))
-      . group
-      . sort
-      $ nucleotides
+nucleotideCounts =
+  either (Left . (: [])) (Right . fromListWith (+) . map (, 1))
+    . mapM charToNucleotide
+
