@@ -1,5 +1,4 @@
 {-# LANGUAGE TupleSections #-}
-{-# LANGUAGE LambdaCase #-}
 
 module DNA
   ( nucleotideCounts
@@ -22,7 +21,7 @@ charToNucleotide a = case a of
   _   -> Left a
 
 nucleotideCounts :: String -> Either String (Map Nucleotide Int)
-nucleotideCounts =
-  either (Left . (: [])) (Right . fromListWith (+) . map (, 1))
-    . mapM charToNucleotide
+nucleotideCounts xs = either (Left . (: []))
+                             (Right . fromListWith (+) . map (, 1))
+                             (mapM charToNucleotide xs)
 
