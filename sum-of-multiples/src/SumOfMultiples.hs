@@ -4,7 +4,9 @@ module SumOfMultiples
 where
 
 isMultiple :: Integer -> Integer -> Bool
-isMultiple x factor = (factor /= 0) && (x `mod` factor == 0)
+isMultiple x factor = case factor of
+  0 -> False
+  _ -> x `mod` factor == 0
 
 getMultiples :: Integer -> [Integer] -> [Integer]
 getMultiples limit factors =
