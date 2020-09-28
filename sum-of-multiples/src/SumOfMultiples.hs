@@ -6,8 +6,9 @@ where
 import           Data.List                      ( nub )
 
 getMultiples :: Integer -> Integer -> [Integer]
-getMultiples limit factor =
-  [ x * factor | x <- [1 .. limit], x * factor < limit ]
+getMultiples limit factor = case factor of
+  0 -> []
+  _ -> [ x | x <- [1 .. limit - 1], x `mod` factor == 0 ]
 
 sumOfMultiples :: [Integer] -> Integer -> Integer
 sumOfMultiples factors limit =
