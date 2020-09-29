@@ -3,5 +3,10 @@ module ArmstrongNumbers
   )
 where
 
+import           Data.Char                      ( digitToInt )
+
 armstrong :: Integral a => a -> Bool
-armstrong = error "You need to implement this function."
+armstrong a =
+  let digits      = show . toInteger $ a
+      sumOfDigits = sum . map ((^ length digits) . digitToInt) $ digits
+  in  fromIntegral a == sumOfDigits
